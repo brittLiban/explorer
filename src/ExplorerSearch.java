@@ -32,6 +32,74 @@ public class ExplorerSearch {
         // Implement your method here!
         // Please also make more test cases
         // I STRONGLY RECOMMEND testing some helpers you might make too
+
+        // 1
+        int[] startPoint = explorerFinder(island);
         return -1;
     }
+
+    //FIRST STEP is to LOCATE the explorer
+
+    //this is done by first setting up a loop that can access each row inside the 2d array
+
+    //then set up a loop that will access each item in the row
+    public static int[] explorerFinder(int[][] island){
+        
+        for(int r = 0; r < island.length; r++){
+            for(int c = 0; c < island.length; c++){
+                if(island[r][c] == 0){
+                    return new int[]{r,c};
+                }
+            }
+        }
+        throw new IllegalArgumentException("There isn't an explorer");
+    }
+
+    // public static List<int[]> possibleMoves(int[][] island, int[] current){
+
+
+    //     return new List<int[]>;
+    // }
+    public static List<int[]> possibleMoves(int[][] island, int[] current){
+
+        int curR = current[0];
+        int curC = current[1];
+        List<int[]> moves = new ArrayList<>();
+
+
+        //UP
+        int newR = curR -1;
+        int newC = curC;
+        if(newR >= 0 && island[newR][newC] != 'W'){
+            moves.add(new int[]{newR, newC});
+        }
+
+        //DOWN
+        newR = curR + 1;
+        newC = curC;
+        if(newR < island.length && island[newR][newC] != 'W'){
+            moves.add(new int[]{newR, newC});
+        }
+
+        //LEFT
+        newR = curR;
+        newC = curC - 1;
+        if(newC >= 0 && island[newR][newC] != 'W'){
+            moves.add(new int[]{newR, newC});
+        }
+
+         //RIGHT
+         newR = curR;
+         newC = curC + 1;
+         if(newC < island[0].length && island[newR][newC] != 'W'){
+             moves.add(new int[]{newR, newC});
+         }
+ 
+
+         
+        
+       
+        return moves;
+    }
+
 }
