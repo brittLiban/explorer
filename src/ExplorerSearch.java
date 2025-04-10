@@ -35,7 +35,10 @@ public class ExplorerSearch {
 
         // 1
         int[] startPoint = explorerFinder(island);
-        return -1;
+        boolean[][] visited = new boolean [island.length] [island[0].length];
+
+        List<int[]> reachable =  reachableArea(island, startPoint, visited);
+        return reachable.size();
     }
 
     //FIRST STEP is to LOCATE the explorer
@@ -46,7 +49,7 @@ public class ExplorerSearch {
     public static int[] explorerFinder(int[][] island){
         
         for(int r = 0; r < island.length; r++){
-            for(int c = 0; c < island.length; c++){
+            for(int c = 0; c < island[0].length; c++){
                 if(island[r][c] == 0){
                     return new int[]{r,c};
                 }
@@ -70,36 +73,57 @@ public class ExplorerSearch {
         //UP
         int newR = curR -1;
         int newC = curC;
-        if(newR >= 0 && island[newR][newC] != 'W'){
+        if(newR >= 0 && island[newR][newC] != 2 && island[newR][newC] != 3){
             moves.add(new int[]{newR, newC});
         }
 
         //DOWN
         newR = curR + 1;
         newC = curC;
-        if(newR < island.length && island[newR][newC] != 'W'){
+        if(newR < island.length && island[newR][newC] != 2 && island[newR][newC] != 3){
             moves.add(new int[]{newR, newC});
         }
 
         //LEFT
         newR = curR;
         newC = curC - 1;
-        if(newC >= 0 && island[newR][newC] != 'W'){
+        if(newC >= 0 && island[newR][newC] != 2 && island[newR][newC] != 3){
             moves.add(new int[]{newR, newC});
         }
 
          //RIGHT
          newR = curR;
          newC = curC + 1;
-         if(newC < island[0].length && island[newR][newC] != 'W'){
+         if(newC < island[0].length && island[newR][newC] != 2 && island[newR][newC] != 3){
              moves.add(new int[]{newR, newC});
          }
  
-
-         
-        
-       
         return moves;
     }
 
+    public static List<int[]> reachableArea(int[][] island, int[]current, boolean[][] visited){
+        int curR = current[0];
+        int curC = current[1];
+
+        if(visited[curR][curC]) return new ArrayList<>();
+
+        //this one does have a reach goal like food, it just wants to know all the possible locals! 
+
+        visited[curR][curC] = true;
+
+        List<int[]> result = new ArrayList<>();
+        //ADDING THE CURRENT ITTERATION LOCALE TO THE POSSIBLE MOVES
+        // only adding a local to the list WHEN AND IF WE VISIT IT
+        // how can this problematic? 
+        result.add(current);
+
+        //grabbing all the possible moves using the POSSIBLE MOVES method... FOR THE CURRENT ITERATION
+        List<int[]> moves = possibleMoves(island, current);
+        for(int[] move : moves){
+            result.addAll(reachableArea(island, move, visited));
+        }
+        
+
+        return result;
+    }
 }
